@@ -1,6 +1,6 @@
 # Comfy Pilot
 
-[![Stars](https://img.shields.io/github/stars/ConstantineB6/Comfy-Pilot)](https://github.com/ConstantineB6/Comfy-Pilot/stargazers)
+[![Stars](https://img.shields.io/github/stars/hypernought/comfy-pilot)](https://github.com/hypernought/comfy-pilot/stargazers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![ComfyUI Registry](https://img.shields.io/badge/ComfyUI-Registry-blue)](https://registry.comfy.org/publishers/constantine/nodes/comfy-pilot)
 
@@ -34,8 +34,10 @@ comfy node install comfy-pilot
 
 **Git Clone:**
 ```bash
-cd ~/Documents/ComfyUI/custom_nodes && git clone https://github.com/ConstantineB6/comfy-pilot.git
+cd ~/Documents/ComfyUI/custom_nodes && git clone https://github.com/hypernought/comfy-pilot.git
 ```
+
+**Using the Fork**: This fork uses `/mcp/` endpoints for OpenCode/OpenClaw compatibility. If using the original [ConstantineB6/comfy-pilot](https://github.com/ConstantineB6/comfy-pilot), it uses `/claude-code/` endpoints instead.
 
 Claude Code CLI will be installed automatically if not found.
 
@@ -54,6 +56,18 @@ Claude Code CLI will be installed automatically if not found.
 ## Demo
 
 https://github.com/user-attachments/assets/325b1194-2334-48a1-94c3-86effd1fef02
+
+## Fork
+
+This is a fork of [Comfy Pilot](https://github.com/ConstantineB6/comfy-pilot) with platform-neutral MCP support.
+
+### Differences from Original
+
+- **Generic MCP Endpoints**: The original uses `/claude-code/` endpoints which are tied to the Claude Code platform. This fork uses `/mcp/` endpoints for platform neutrality, allowing any MCP client (OpenCode, Claude Code, OpenClaw) to connect without platform-specific assumptions.
+
+- **Platform-Agnostic Naming**: Refactored MCP tool names and configuration to work with any MCP-compatible client, not just Claude Code.
+
+- **Extended MCP Setup Docs**: Added setup instructions for OpenCode, Claude Code, and OpenClaw in a unified document.
 
 ## Usage
 
