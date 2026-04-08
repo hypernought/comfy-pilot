@@ -704,8 +704,7 @@ def get_comfyui_url_cached():
 
 
 def setup_routes(app):
-    """Set up the WebSocket and API routes."""
-    app.router.add_get("/ws/claude-terminal", websocket_handler)
+    """Set up the MCP API routes."""
     app.router.add_get("/mcp/workflow", workflow_handler)
     app.router.add_post("/mcp/workflow", workflow_handler)
     app.router.add_post("/mcp/run-node", run_node_handler)
@@ -714,15 +713,13 @@ def setup_routes(app):
     app.router.add_get("/mcp/mcp-status", mcp_status_handler)
     app.router.add_get("/mcp/memory", memory_stats_handler)
     app.router.add_get("/mcp/platform", platform_info_handler)
-    print("[Claude Code] Terminal WebSocket endpoint registered at /ws/claude-terminal")
     print("[MCP] Workflow API endpoint registered at /mcp/workflow")
     print("[MCP] Run node endpoint registered at /mcp/run-node")
     print("[MCP] Graph command endpoint registered at /mcp/graph-command")
     print("[MCP] MCP status endpoint registered at /mcp/mcp-status")
     print("[MCP] Memory stats endpoint registered at /mcp/memory")
     print("[MCP] Platform info endpoint registered at /mcp/platform")
-    if IS_WINDOWS:
-        print("[Claude Code] Note: Terminal functionality disabled on Windows")
+    print("[MCP] Comfy Pilot ready - MCP clients can now connect")
 
 
 def write_comfyui_url():
@@ -801,23 +798,16 @@ def setup_mcp_config():
 try:
     from server import PromptServer
 
-    # Register our WebSocket route
+    # Register our MCP routes
     setup_routes(PromptServer.instance.app)
 
     # Write ComfyUI URL for MCP server
     write_comfyui_url()
 
-    # Set up MCP configuration (skip on Windows if claude not found)
-    if not IS_WINDOWS:
-        setup_mcp_config()
-    else:
-        print("[Claude Code] Skipping MCP auto-config on Windows (use Clawdbot instead)")
-
     # Log initial memory usage
     mem_mb = get_memory_mb()
-    platform_note = " (Windows - terminal disabled)" if IS_WINDOWS else ""
-    print(f"[Claude Code] Plugin loaded successfully{platform_note} (Memory: {mem_mb:.1f}MB)")
+    print(f"[Comfy Pilot] MCP server ready (Memory: {mem_mb:.1f}MB)")
 except Exception as e:
-    print(f"[Claude Code] Failed to register routes: {e}")
+    print(f"[Comfy Pilot] Failed to register routes: {e}")
     import traceback
     traceback.print_exc()

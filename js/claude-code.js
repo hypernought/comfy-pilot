@@ -974,7 +974,7 @@ async function checkMcpStatus() {
 
     try {
         // Try to reach the MCP server via our backend endpoint
-        const response = await fetch("/claude-code/mcp-status", {
+        const response = await fetch("/mcp/mcp-status", {
             method: "GET",
             signal: AbortSignal.timeout(3000)
         });
@@ -1024,7 +1024,7 @@ async function syncWorkflow() {
         lastWorkflowHash = hash;
 
         // Send to backend (without graphToPrompt which can cause UI flicker)
-        await fetch("/claude-code/workflow", {
+        await fetch("/mcp/workflow", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -1052,14 +1052,14 @@ async function getWorkflowApi() {
 
 async function pollGraphCommands() {
     try {
-        const response = await fetch("/claude-code/graph-command");
+        const response = await fetch("/mcp/graph-command");
         const data = await response.json();
 
         if (data.command) {
             const result = await executeGraphCommand(data.command);
 
             // Send result back
-            await fetch("/claude-code/graph-command", {
+            await fetch("/mcp/graph-command", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
