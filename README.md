@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![ComfyUI Registry](https://img.shields.io/badge/ComfyUI-Registry-blue)](https://registry.comfy.org/publishers/constantine/nodes/comfy-pilot)
 
-Talk to your ComfyUI workflows. Comfy Pilot gives Claude Code direct access to see, edit, and run your workflows — with an embedded terminal right inside ComfyUI.
+Talk to your ComfyUI workflows. Comfy Pilot gives any MCP-compatible client (OpenCode, Claude Code, OpenClaw, etc.) direct access to see, edit, and run your workflows — with an embedded terminal right inside ComfyUI.
 
 ![Comfy Pilot](thumbnail.jpg)
 
@@ -46,7 +46,7 @@ Claude Code CLI will be installed automatically if not found.
 
 ## Features
 
-- **MCP Server** - Gives Claude Code direct access to view, edit, and run your ComfyUI workflows
+- **MCP Server** - Gives any MCP client direct access to view, edit, and run your ComfyUI workflows
 - **Embedded Terminal** - Full xterm.js terminal running Claude Code right inside ComfyUI
 - **Image Viewing** - Claude can see outputs from Preview Image and Save Image nodes
 - **Graph Editing** - Create, delete, move, and connect nodes programmatically
@@ -58,17 +58,66 @@ https://github.com/user-attachments/assets/325b1194-2334-48a1-94c3-86effd1fef02
 ## Usage
 
 1. Restart ComfyUI after installation
-2. The floating Claude Code terminal appears in the top-right corner
-3. The MCP server is automatically configured for Claude Code
-4. Ask Claude to help with your workflow:
+2. The floating terminal appears in the top-right corner (Unix/Linux only)
+3. Configure your MCP client (see below)
+4. Ask your MCP client to help with your workflow:
    - "What nodes are in my current workflow?"
    - "Add a KSampler node connected to my checkpoint loader"
-   - "Look at the preview image and tell me what you see"
    - "Run the workflow up to node 5"
+
+## MCP Setup
+
+The MCP server works with any MCP-compatible client. Configure it manually:
+
+### OpenCode
+
+Add to your `settings.json`:
+```json
+{
+  "mcpServers": {
+    "comfyui": {
+      "command": "python",
+      "args": ["U:/ComfyUI/custom_nodes/comfy-pilot/mcp_server.py"]
+    }
+  }
+}
+```
+
+### Claude Code
+
+Add to `~/.claude/settings.json`:
+```json
+{
+  "mcpServers": {
+    "comfyui": {
+      "command": "python3",
+      "args": ["/path/to/comfy-pilot/mcp_server.py"]
+    }
+  }
+}
+```
+
+Or run: `claude mcp add comfyui python3 /path/to/mcp_server.py`
+
+### OpenClaw
+
+Add to your MCP configuration:
+```json
+{
+  "mcpServers": {
+    "comfyui": {
+      "command": "python",
+      "args": ["/path/to/mcp_server.py"]
+    }
+  }
+}
+```
+
+**Note:** Ensure Python is in your PATH or use the full path to your Python executable.
 
 ## MCP Tools
 
-The MCP server provides these tools to Claude Code:
+The MCP server provides these tools to your MCP client:
 
 | Tool | Description |
 |------|-------------|
@@ -141,7 +190,7 @@ Claude will use `download_model` to download from Hugging Face to your ComfyUI m
 │  ComfyUI Server                                     │
 │  ┌─────────────────┐  ┌──────────────────────────┐  │
 │  │  PTY Process    │  │  Plugin Endpoints        │  │
-│  │  (claude CLI)   │  │  /claude-code/*          │  │
+│  │  (claude CLI)   │  │  /mcp/*                  │  │
 │  └─────────────────┘  └──────────────────────────┘  │
 └─────────────────────────────────────────────────────┘
             │                        │
@@ -156,8 +205,9 @@ Claude will use `download_model` to download from Hugging Face to your ComfyUI m
 
 - `__init__.py` - Plugin backend: WebSocket terminal, REST endpoints
 - `js/claude-code.js` - Frontend: xterm.js terminal, workflow sync
-- `mcp_server.py` - MCP server for Claude Code integration
-- `CLAUDE.md` - Instructions for Claude when working with ComfyUI
+- `mcp_server.py` - MCP server for any MCP-compatible client
+- `mcp_config.json` - MCP configuration template
+- `CLAUDE.md` - Instructions for AI assistants when working with ComfyUI
 
 ## Troubleshooting
 

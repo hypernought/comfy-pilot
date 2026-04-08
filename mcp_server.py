@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-MCP Server for ComfyUI - Exposes workflow tools to Claude Code.
+MCP Server for ComfyUI - Exposes workflow tools to any MCP client.
 
 This server connects to ComfyUI's API and provides tools to:
 - View the current workflow
@@ -12,12 +12,24 @@ This server connects to ComfyUI's API and provides tools to:
 Usage:
     python mcp_server.py
 
-Configure in Claude Code's settings (~/.claude/settings.json):
+Configure in your MCP client's settings:
+
+OpenCode (settings.json):
 {
     "mcpServers": {
         "comfyui": {
             "command": "python",
-            "args": ["/path/to/mcp_server.py"]
+            "args": ["path/to/mcp_server.py"]
+        }
+    }
+}
+
+Claude Code (~/.claude/settings.json):
+{
+    "mcpServers": {
+        "comfyui": {
+            "command": "python",
+            "args": ["path/to/mcp_server.py"]
         }
     }
 }
@@ -137,7 +149,7 @@ def make_request(endpoint: str, method: str = "GET", data: dict = None, timeout:
 def get_workflow() -> dict:
     """Get the current workflow from ComfyUI."""
     # First try to get the live workflow from our plugin endpoint
-    live_workflow = make_request("/claude-code/workflow")
+    live_workflow = make_request("/mcp/workflow")
 
     if live_workflow and live_workflow.get("workflow"):
         return {
@@ -883,7 +895,7 @@ def run_node(node_ids) -> dict:
 
 def send_graph_command(action: str, params: dict) -> dict:
     """Send a graph manipulation command to the frontend."""
-    result = make_request("/claude-code/graph-command", method="POST", data={
+    result = make_request("/mcp/graph-command", method="POST", data={
         "action": action,
         "params": params
     })

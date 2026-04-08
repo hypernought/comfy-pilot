@@ -1,4 +1,4 @@
-# ComfyUI Claude Code Plugin - Guidelines
+# ComfyUI MCP Plugin - Guidelines
 
 ## Working with ComfyUI Workflows
 

@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "comfyui": {
+      "command": "python",
+      "args": ["{PLUGIN_DIR}/mcp_server.py"],
+      "env": {}
+    }
+  }
+}
